@@ -5,13 +5,21 @@
  */
 package monitor;
 
+import controller.PrincipalController;
+import dao.EntidadeBase;
+import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -19,33 +27,37 @@ import javafx.stage.Stage;
  */
 public class Monitor extends Application {
     
-    @Override
-    public void start(Stage primaryStage) {
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-            }
-        });
-        
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
-        
-        Scene scene = new Scene(root, 300, 250);
-        
-        primaryStage.setTitle("Hello World!");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
+   public static Scene SCENE;
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
+    @Override
+    public void start(Stage stage) throws Exception {
+
+        BorderPane pane = null;
+
+        try {
+
+            pane = FXMLLoader.load(PrincipalController.class.getClassLoader().getResource("fxml/Principal.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
+
+            Scene scene = new Scene(pane, stage.getWidth(), stage.getHeight());
+
+            stage.setResizable(false);
+            SCENE = scene;
+            stage.setTitle("Monitor - Sistema de medição de temperatura do solo de baixo-custo");
+
+            stage.setScene(scene);
+
+            stage.show();
+
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
+
     }
+    
+     public static void main(String[] args) {
+         EntityManagerFactory emf = Persistence.createEntityManagerFactory("MonitorPU");
+         EntityManager em = emf.createEntityManager();
+          Application.launch(Monitor.class, args);
+     }
     
 }

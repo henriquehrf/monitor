@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import java.util.*?>
@@ -7,8 +8,49 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PrincipalController">
-    <stylesheets>
-        <URL value="@/monitor/Estilo.css"/>
-    </stylesheets>
-</AnchorPane>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../monitor/Estilo.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PrincipalController">
+   <top>
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </top>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" prefHeight="209.0" prefWidth="800.0">
+               <children>
+                  <Button fx:id="btnImportarDados" mnemonicParsing="false" onAction="#btnImportarDados_OnAction" onKeyPressed="#btnImportarDados_OnKeyPressed" prefHeight="120.0" prefWidth="200.0" text="%btnImportarDados">
+                     <HBox.margin>
+                        <Insets left="50.0" right="50.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnExportarDados" mnemonicParsing="false" onAction="#btnExportarDados_OnAction" onKeyPressed="#btnExportarDados_OnKeyPressed" prefHeight="120.0" prefWidth="200.0" text="%btnExportarDados">
+                     <HBox.margin>
+                        <Insets left="50.0" right="50.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="173.0" prefWidth="800.0">
+               <children>
+                  <Button fx:id="btnVisualizarDados" mnemonicParsing="false" onAction="#btnVisualizarDados_OnAction" onKeyPressed="#btnVisualizarDados_OnKeyPressed" prefHeight="120.0" prefWidth="200.0" text="%btnVisualizarDados">
+                     <HBox.margin>
+                        <Insets left="50.0" right="50.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnEstatistica" mnemonicParsing="false" onAction="#btnEstatistica_OnAction" onKeyPressed="#btnEstatistica_OnKeyPressed" prefHeight="120.0" prefWidth="200.0" text="%btnEstatistica">
+                     <HBox.margin>
+                        <Insets left="50.0" right="50.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="%lvbBarraStatus" />
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>

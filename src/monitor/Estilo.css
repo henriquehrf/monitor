@@ -5,3 +5,32 @@
 .mainFxmlClass {
 
 }
+.border-pane{
+    -fx-background-color: white;
+    -fx-max-height:600;
+    -fx-max-width:800;
+    -fx-min-height:600;
+    -fx-min-width:800; 
+}
+.button{
+    -fx-border-color:none;
+    -fx-border-width: 1px;
+    -fx-background-color:none;
+    -fx-font-size: 9pt;
+    -fx-font-family: "Arial";
+    -fx-cursor:hand;
+    -fx-background-color: linear-gradient( #dcdcdc,  #a9a9a9);
+}
+/*.button:hover{
+    -fx-background-color: linear-gradient( #f0f8ff,   #5f9ea0);
+}
+.button:focused{
+    -fx-background-color: linear-gradient( #f0f8ff,   #5f9ea0);
+}*/
+.button-main{
+     -fx-max-height:120;
+    -fx-max-width:200;
+    -fx-min-height:120;
+    -fx-min-width:200;
+    -fx-alignment:CENTER;
+}
