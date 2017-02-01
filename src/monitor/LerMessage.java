@@ -19,7 +19,7 @@ public class LerMessage {
         ResourceBundle rb;
         try {
             Locale ptBR = new Locale("pt","BR");
-           rb = ResourceBundle.getBundle("utilitarios/i18N_pt_BR");
+           rb = ResourceBundle.getBundle("monitor/i18N_pt_BR");
             return rb.getString(message);
 
         } catch (Exception ex) {
