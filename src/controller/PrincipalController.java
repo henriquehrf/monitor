@@ -58,6 +58,7 @@ public class PrincipalController {
         }else{
             aviso.alerta(Alert.AlertType.INFORMATION, message.getMessage("msgAcaoRealizadaComSucesso"), message.getMessage("msgGeracaoGrafico"));
             conv.getFile(file);
+            GraficoController.setMemoria(conv.getFile(file));
             
               try {
             Parent root;

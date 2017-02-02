@@ -9,30 +9,52 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <BorderPane fx:id="border" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GraficoController">
    <bottom>
-      <HBox alignment="CENTER" prefHeight="65.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="165.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
-            <RadioButton fx:id="rdbTemperaturaSolo" mnemonicParsing="false" text="%rdbTemperaturaSolo" />
-            <RadioButton fx:id="rdbTemperaturaAmbiente" mnemonicParsing="false" text="%rdbTemperaturaAmbiente" />
-            <RadioButton fx:id="rdbUmidadeAmbiente" mnemonicParsing="false" text="%rdbUmidadeAmbiente" />
-            <Button fx:id="btnVoltar" mnemonicParsing="false" onAction="#btnVoltar_OnAction" onKeyPressed="#btnVoltar_OnKeyPressed" text="%btnVoltar">
-               <HBox.margin>
-                  <Insets right="50.0" />
-               </HBox.margin>
-            </Button>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="800.0">
+               <children>
+                  <Label fx:id="lblMaximo" text="Label">
+                     <HBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="lblMinimo" text="Label">
+                     <HBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="lblMedia" text="Label">
+                     <HBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="lblVarianca" text="Label">
+                     <HBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="lblDesvioPadrao" text="Label">
+                     <HBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="65.0" prefWidth="600.0">
+               <children>
+                  <RadioButton fx:id="rdbTemperaturaSolo" mnemonicParsing="false" onAction="#rdbTemperaturaSoloOnAction" text="%rdbTemperaturaSolo" />
+                  <RadioButton fx:id="rdbTemperaturaAmbiente" mnemonicParsing="false" onAction="#rdbTemperaturaAmbiente_OnAction" text="%rdbTemperaturaAmbiente" />
+                  <RadioButton fx:id="rdbUmidadeAmbiente" mnemonicParsing="false" onAction="#rdbUmidadeAmbiente_OnAction" text="%rdbUmidadeAmbiente" />
+                  <Button fx:id="btnVoltar" mnemonicParsing="false" onAction="#btnVoltar_OnAction" onKeyPressed="#btnVoltar_OnKeyPressed" text="%btnVoltar">
+                     <HBox.margin>
+                        <Insets right="50.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
    </bottom>
-   <center>
-      <LineChart fx:id="graph" title="teste" BorderPane.alignment="CENTER">
-        <xAxis>
-          <CategoryAxis fx:id="eixoX" side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis fx:id="eixoY" side="LEFT" />
-        </yAxis>
-      </LineChart>
-   </center>
 </BorderPane>

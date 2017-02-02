@@ -35,7 +35,7 @@ public class Monitor extends Application {
 
             Scene scene = new Scene(pane, stage.getWidth(), stage.getHeight());
 
-            stage.setResizable(false);
+            //stage.setResizable(false);
             SCENE = scene;
             stage.setTitle("Monitor - Sistema de medição de temperatura do solo de baixo-custo");
 
