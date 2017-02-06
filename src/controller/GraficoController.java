@@ -5,25 +5,34 @@
  */
 package controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import monitor.Alertas;
+import monitor.LerMessage;
+import monitor.Monitor;
 import negocio.DadosCache;
 
 /**
@@ -94,6 +103,13 @@ public class GraficoController implements Initializable {
 
     @FXML
     void btnVoltar_OnAction(ActionEvent event) {
+        try {
+            Parent root;
+            root = FXMLLoader.load(GraficoController.class.getClassLoader().getResource("fxml/Principal.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
+            Monitor.SCENE.setRoot(root);
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
 
     }
 
@@ -119,24 +135,133 @@ public class GraficoController implements Initializable {
             }
             if (memoria.size() <= 1) {
                 varianca = 0;
-                 
+
             } else {
-                varianca = varianca / memoria.size() - 1;
-                 media=media/memoria.size();
-               
+                varianca = varianca / (memoria.size() - 1);
+                media = media / memoria.size();
+
             }
-           
+
             //Math.sqrt(x);
             dPadrao = (float) Math.sqrt(varianca);
-            
 
             lblDesvioPadrao.setText("Desvio Padrão: " + dPadrao);
-            lblMaximo.setText("Máximo: " + max+"%");
-            lblMedia.setText("Média:" + media+"%");
-            lblMinimo.setText("Minímo: " + min+"%");
+            lblMaximo.setText("Máximo: " + max + "%");
+            lblMedia.setText("Média:" + media + "%");
+            lblMinimo.setText("Minímo: " + min + "%");
             lblVarianca.setText("Variança: " + varianca);
 
         }
+        if (rdbTemperaturaAmbiente.isSelected() && !rdbTemperaturaSolo.isSelected()) {
+
+            float media = 0;
+            float dPadrao = 0;
+            float varianca = 0;
+            float max = memoria.get(0).getTemp_dth();
+            float min = memoria.get(0).getTemp_dth();
+
+            for (int i = 0; i < memoria.size(); i++) {
+                if (memoria.get(i).getTemp_dth() > max) {
+                    max = memoria.get(i).getTemp_dth();
+                }
+                if (memoria.get(i).getTemp_dth() < min) {
+                    min = memoria.get(i).getTemp_dth();
+                }
+                media = memoria.get(i).getTemp_dth() + media;
+                varianca = memoria.get(i).getTemp_dth() * memoria.get(i).getTemp_dth() + dPadrao;
+            }
+            if (memoria.size() <= 1) {
+                varianca = 0;
+
+            } else {
+                varianca = varianca / (memoria.size() - 1);
+                media = media / memoria.size();
+
+            }
+            dPadrao = (float) Math.sqrt(varianca);
+
+            lblDesvioPadrao.setText("Desvio Padrão: " + dPadrao);
+            lblMaximo.setText("Máximo: " + max + "ºC");
+            lblMedia.setText("Média: " + media + "ºC");
+            lblMinimo.setText("Minímo: " + min + "ºC");
+            lblVarianca.setText("Variança: " + varianca);
+
+        }
+        if (!rdbTemperaturaAmbiente.isSelected() && rdbTemperaturaSolo.isSelected()) {
+            float media = 0;
+            float dPadrao = 0;
+            float varianca = 0;
+            float max = memoria.get(0).getTemp_ds();
+            float min = memoria.get(0).getTemp_ds();
+
+            for (int i = 0; i < memoria.size(); i++) {
+                if (memoria.get(i).getTemp_ds() > max) {
+                    max = memoria.get(i).getTemp_ds();
+                }
+                if (memoria.get(i).getTemp_ds() < min) {
+                    min = memoria.get(i).getTemp_ds();
+                }
+                media = memoria.get(i).getTemp_ds() + media;
+                varianca = memoria.get(i).getTemp_ds() * memoria.get(i).getTemp_ds() + dPadrao;
+            }
+            if (memoria.size() <= 1) {
+                varianca = 0;
+
+            } else {
+                varianca = varianca / (memoria.size() - 1);
+                media = media / memoria.size();
+
+            }
+            dPadrao = (float) Math.sqrt(varianca);
+
+            lblDesvioPadrao.setText("Desvio Padrão: " + dPadrao);
+            lblMaximo.setText("Máximo: " + max + "ºC");
+            lblMedia.setText("Média: " + media + "ºC");
+            lblMinimo.setText("Minímo: " + min + "ºC");
+            lblVarianca.setText("Variança: " + varianca);
+
+        }
+        if (rdbTemperaturaAmbiente.isSelected() && rdbTemperaturaSolo.isSelected()) {
+            float media = 0;
+            float dPadrao = 0;
+            float varianca = 0;
+            float max = memoria.get(0).getTemp_ds();
+            float min = memoria.get(0).getTemp_ds();
+
+            for (int i = 0; i < memoria.size(); i++) {
+                if (memoria.get(i).getTemp_ds() > max) {
+                    max = memoria.get(i).getTemp_ds();
+                }
+                if (memoria.get(i).getTemp_ds() < min) {
+                    min = memoria.get(i).getTemp_ds();
+                }
+                if (memoria.get(i).getTemp_dth() > max) {
+                    max = memoria.get(i).getTemp_dth();
+                }
+                if (memoria.get(i).getTemp_dth() < min) {
+                    min = memoria.get(i).getTemp_dth();
+                }
+                media = (memoria.get(i).getTemp_ds() + memoria.get(i).getTemp_dth()) / 2 + media;
+                varianca = (memoria.get(i).getTemp_ds() - memoria.get(i).getTemp_dth()) * (memoria.get(i).getTemp_ds() - memoria.get(i).getTemp_dth()) + dPadrao;
+            }
+            if (memoria.size() <= 1) {
+                varianca = 0;
+
+            } else {
+                varianca = varianca / (memoria.size() - 1);
+                media = media / memoria.size();
+
+            }
+            dPadrao = (float) Math.sqrt(varianca);
+
+            lblDesvioPadrao.setText("Desvio Padrão: " + dPadrao);
+            lblMaximo.setText("Máximo: " + max + "ºC");
+            lblMedia.setText("Média: " + media + "ºC");
+            lblMinimo.setText("Minímo: " + min + "ºC");
+            lblVarianca.setText("Variança: " + varianca);
+
+        }
+
     }
 
     @FXML
@@ -289,29 +414,26 @@ public class GraficoController implements Initializable {
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)  {
+        Alertas aviso = new Alertas();
+        LerMessage message = new LerMessage();
 
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                rdbTemperaturaAmbiente.setSelected(true);
-                rdbTemperaturaSolo.setSelected(true);
-                gerarGrafico();
+                try {
+
+                    rdbTemperaturaAmbiente.setSelected(true);
+                    rdbTemperaturaSolo.setSelected(true);
+                    gerarGrafico();
+                } catch (Exception ex) {
+                    aviso.alerta(Alert.AlertType.ERROR, "Erro - Arquivo incompativel", ex.getMessage());
+                   // btnVoltar_OnAction(event);
+                }
 
             }
         });
 
-//        dataSeries1.getData().add(new XYChart.Data<String, Number>("jan", 12));
-//
-//        dataSeries1.getData().add(new XYChart.Data<String, Number>("fev", 32));
-//        dataSeries1.getData().add(new XYChart.Data<>(10, data));
-//        data.setMonth(5);
-//        dataSeries1.getData().add(new XYChart.Data<>(20, data));
-//        data.setMonth(6);
-//        dataSeries1.getData().add(new XYChart.Data<>(40, data));
-//        data.setMonth(7);
-//        dataSeries1.getData().add(new XYChart.Data<>(80, data));
-//        data.setMonth(8);
     }
 
 }

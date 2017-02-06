@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Properties;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 
 /**
  *
@@ -27,13 +28,13 @@ public class Alertas {
             alert.showAndWait();
 
         } catch (Exception ex) {
-          //  alerta(Alert.AlertType.ERROR, ex.getMessage(), "ERRO");
+            //  alerta(Alert.AlertType.ERROR, ex.getMessage(), "ERRO");
             System.out.println(ex.getMessage());
         }
 
     }
 
-    public boolean alerta(Alert.AlertType TipoAviso, String cabecalho, String msg,String Opcao1,String Opcao2) {
+    public boolean alerta(Alert.AlertType TipoAviso, String cabecalho, String msg, String Opcao1, String Opcao2) {
 
         if (TipoAviso.equals(Alert.AlertType.CONFIRMATION)) {
             Alert alert = new Alert(TipoAviso);
@@ -57,4 +58,18 @@ public class Alertas {
         return false;
     }
 
+    public String entrada_dados(String cabecalho, String msg, String content) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle(cabecalho);
+        dialog.setHeaderText(msg);
+        dialog.setContentText(content);
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            return result.get();
+        }else{
+            return "";
+        }
+
+    }
 }

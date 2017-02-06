@@ -5,7 +5,10 @@
  */
 package controller;
 
+import dao.MedicaoDAO;
+import dao.RegiaoDAO;
 import java.io.File;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +22,11 @@ import monitor.Alertas;
 import monitor.LerMessage;
 import monitor.Monitor;
 import negocio.Conversao;
+import negocio.DadosCache;
+import negocio.NegocioMedicao;
+import negocio.NegocioRegiao;
+import vo.Medicao;
+import vo.Regiao;
 
 /**
  * FXML Controller class
@@ -41,34 +49,93 @@ public class PrincipalController {
 
     @FXML
     void btnImportarDados_OnAction(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Localizar Arquivo");
-         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Arquivo de Texto", "*.txt"));
-        Stage stage = new Stage();
-        File file = fileChooser.showOpenDialog(stage);
-        
-        Conversao conv = new Conversao();
-        
-        
         Alertas aviso = new Alertas();
         LerMessage message = new LerMessage();
-        if(aviso.alerta(Alert.AlertType.CONFIRMATION, message.getMessage("msgAguardandoConfirmacao"),message.getMessage("msgConfirmacaoDeImportacao"), message.getMessage("msgSim"), message.getMessage("msgNao"))){
-            
-        }else{
-            aviso.alerta(Alert.AlertType.INFORMATION, message.getMessage("msgAcaoRealizadaComSucesso"), message.getMessage("msgGeracaoGrafico"));
-            conv.getFile(file);
-            GraficoController.setMemoria(conv.getFile(file));
-            
-              try {
-            Parent root;
-            root = FXMLLoader.load(GraficoController.class.getClassLoader().getResource("fxml/grafico.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
-            Monitor.SCENE.setRoot(root);
+        try {
+
+            Conversao conv = new Conversao();
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Localizar Arquivo");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Arquivo de Texto", "*.txt"));
+            Stage stage = new Stage();
+            File file = fileChooser.showOpenDialog(stage);
+
+            if (file == null) {
+                return;
+            }
+
+            if (aviso.alerta(Alert.AlertType.CONFIRMATION, message.getMessage("msgAguardandoConfirmacao"), message.getMessage("msgConfirmacaoDeImportacao"), message.getMessage("msgSim"), message.getMessage("msgNao"))) {
+                String local = aviso.entrada_dados("Completar Dados Obrigatório", "Digite de qual local foi esta medição?", "Por favor digitel o local: ");
+                if (local != "") {
+                    salvar(local, conv.getFile(file));
+                } else {
+                    System.out.println("Erro!");
+                }
+                if (aviso.alerta(Alert.AlertType.CONFIRMATION, message.getMessage("msgAguardandoConfirmacao"), "Importação realizada com sucesso! \nDeseja visualizar o gráfico?", message.getMessage("msgSim"), message.getMessage("msgNao"))) {
+                    conv.getFile(file);
+                    GraficoController.setMemoria(conv.getFile(file));
+
+                    Parent root;
+                    root = FXMLLoader.load(GraficoController.class.getClassLoader().getResource("fxml/grafico.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
+                    Monitor.SCENE.setRoot(root);
+                }
+
+            } else {
+                aviso.alerta(Alert.AlertType.INFORMATION, message.getMessage("msgAcaoRealizadaComSucesso"), message.getMessage("msgGeracaoGrafico"));
+                conv.getFile(file);
+                GraficoController.setMemoria(conv.getFile(file));
+
+                Parent root;
+                root = FXMLLoader.load(GraficoController.class.getClassLoader().getResource("fxml/grafico.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
+                Monitor.SCENE.setRoot(root);
+
+            }
         } catch (Exception ex) {
-            System.err.println(ex.getMessage());
+            aviso.alerta(Alert.AlertType.WARNING, "Erro", ex.getMessage());
         }
+
+    }
+
+    void salvar(String local, List<DadosCache> leitura) {
+
+        // Medicao med = new Medicao();
+        Regiao reg = new Regiao();
+
+        reg.setRegiao(local);
+
+        RegiaoDAO RDao = new RegiaoDAO();
+        NegocioRegiao negRegiao = new NegocioRegiao(RDao);
+
+        try {
+
+            negRegiao.salvar(reg);
+
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
-        
+        try {
+
+            for (int i = 0; i < leitura.size(); i++) {
+                Medicao med = new Medicao();
+                MedicaoDAO MDao = new MedicaoDAO();
+                NegocioMedicao negMedicao = new NegocioMedicao(MDao);
+
+                med.setTemperatura_dht(leitura.get(i).getTemp_dth());
+                med.setRtc(leitura.get(i).getData());
+                med.setTemperatura_ds(leitura.get(i).getTemp_ds());
+                med.setUmidade_dht(leitura.get(i).getUmidade_dht());
+                med.setId_regiao(reg);
+
+                negMedicao.salvar(med);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
+//          MedicaoDAO m = new MedicaoDAO();
+//        NegocioMedicao neg = new NegocioMedicao(m);
     }
 
     @FXML
@@ -88,6 +155,15 @@ public class PrincipalController {
 
     @FXML
     void btnVisualizarDados_OnAction(ActionEvent event) {
+
+        try {
+
+            Parent root;
+            root = FXMLLoader.load(Consulta_MedicaoController.class.getClassLoader().getResource("fxml/Consulta_Medicao.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
+            Monitor.SCENE.setRoot(root);
+        }catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
 
     }
 

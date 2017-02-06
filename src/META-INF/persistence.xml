@@ -3,6 +3,7 @@
   <persistence-unit name="MonitorPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>vo.Medicao</class>
+    <class>vo.Regiao</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/Medicao"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>

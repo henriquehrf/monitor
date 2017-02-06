@@ -10,9 +10,13 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,6 +30,9 @@ import javax.persistence.TemporalType;
  * @author Henrique Firmino
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "Medicao.BuscarDados",query ="select m from Medicao m where m.id_regiao.id_regiao = :regiao")
+})
 public class Medicao  implements Serializable, EntidadeBase{
 
     
@@ -46,9 +53,6 @@ public class Medicao  implements Serializable, EntidadeBase{
     @Temporal(TemporalType.TIMESTAMP)
     private Date rtc;
     
-    @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date dt_importacao;
     
     
     public Long getId_medicao() {
@@ -114,24 +118,24 @@ public class Medicao  implements Serializable, EntidadeBase{
     public void setRtc(Date rtc) {
         this.rtc = rtc;
     }
+    
 
-    /**
-     * @return the dt_importacao
-     */
-    public Date getDt_importacao() {
-        return dt_importacao;
-    }
-
-    /**
-     * @param dt_importacao the dt_importacao to set
-     */
-    public void setDt_importacao(Date dt_importacao) {
-        this.dt_importacao = dt_importacao;
-    }
 
     @Override
     public Long getId() {
         return id_medicao;
+    }
+
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Regiao id_regiao;
+
+    public Regiao getId_regiao() {
+        return id_regiao;
+    }
+
+    public void setId_regiao(Regiao id_regiao) {
+        this.id_regiao = id_regiao;
     }
 
  
