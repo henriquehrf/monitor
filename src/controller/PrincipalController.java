@@ -24,7 +24,6 @@ import monitor.Alertas;
 import monitor.LerMessage;
 import monitor.Monitor;
 import monitor.Animacao;
-import monitor.testePort;
 import negocio.Conversao;
 import negocio.DadosCache;
 import negocio.NegocioMedicao;
