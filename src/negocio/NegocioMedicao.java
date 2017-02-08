@@ -37,4 +37,11 @@ public class NegocioMedicao {
        
    }
     
+   public void remover(Medicao medicao) throws Exception{
+       try{
+           medicaoDAO.remover(Medicao.class, medicao);
+       }catch(Exception ex){
+           System.out.println(ex.getMessage());
+       }
+   }
 }

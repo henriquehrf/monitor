@@ -7,12 +7,15 @@ package controller;
 
 import dao.MedicaoDAO;
 import dao.RegiaoDAO;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,12 +23,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import monitor.Alertas;
+import monitor.Animacao;
 import monitor.Monitor;
 import negocio.DadosCache;
 import negocio.NegocioMedicao;
@@ -66,35 +73,38 @@ public class Consulta_MedicaoController implements Initializable {
     @FXML
     void btnVisualizar_OnAction(ActionEvent event) {
 
-        if (tblPrincipal.getItems() == null) {
+        if (tblPrincipal.getSelectionModel().getSelectedItem() == null) {
             return;
-        }
-        List<Medicao> med = new ArrayList<>();
-        try {
-            med = medicao.BuscarDados(tblPrincipal.getSelectionModel().getSelectedItem());
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-        // GraficoController.setMemoria(med);
-        List<DadosCache> dado = new ArrayList<>();
-        for (int i = 0; i < med.size(); i++) {
-            DadosCache cache = new DadosCache();
-            cache.setData(med.get(i).getRtc());
-            cache.setTemp_ds(med.get(i).getTemperatura_ds());
-            cache.setTemp_dth(med.get(i).getTemperatura_dht());
-            cache.setUmidade_dht(med.get(i).getUmidade_dht());
-            dado.add(cache);
-        }
-        try {
+        } else {
 
-            GraficoController.setMemoria(dado);
-            Parent root;
-            root = FXMLLoader.load(GraficoController.class.getClassLoader().getResource("fxml/grafico.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
-            Monitor.SCENE.setRoot(root);
-        }catch(Exception ex){
-            System.out.println(ex.getMessage());
-        }
+            an.ProgressIndicator(true, "Acessando o Banco de Dados  e Renderizando o Gráfico");
+            List<Medicao> med = new ArrayList<>();
+            try {
+                med = medicao.BuscarDados(tblPrincipal.getSelectionModel().getSelectedItem());
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+            // GraficoController.setMemoria(med);
+            List<DadosCache> dado = new ArrayList<>();
+            for (int i = 0; i < med.size(); i++) {
+                DadosCache cache = new DadosCache();
+                cache.setData(med.get(i).getRtc());
+                cache.setTemp_ds(med.get(i).getTemperatura_ds());
+                cache.setTemp_dth(med.get(i).getTemperatura_dht());
+                cache.setUmidade_dht(med.get(i).getUmidade_dht());
+                dado.add(cache);
+            }
+            try {
 
+                GraficoController.setMemoria(dado);
+                an.ProgressIndicator(false, "");
+                Parent root;
+                root = FXMLLoader.load(GraficoController.class.getClassLoader().getResource("fxml/grafico.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
+                Monitor.SCENE.setRoot(root);
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
     }
 
     @FXML
@@ -104,11 +114,76 @@ public class Consulta_MedicaoController implements Initializable {
 
     @FXML
     void btnExcluir_OnAction(ActionEvent event) {
+        Animacao an = new Animacao();
+        Alertas alert = new Alertas();
 
+        if (tblPrincipal.getSelectionModel().getSelectedItem() != null) {
+            int i = tblPrincipal.getSelectionModel().getSelectedItems().size();
+            String msg1;
+            String msg2;
+            if (i == 1) {
+                msg1 = "Confirma Remover o Arquivo Selecionado?";
+                msg2 = "A remoção foi realizada com sucesso";
+            } else {
+                msg1 = "Confirma Remover os Arquivos Selecionados?";
+                msg2 = "As remoções foram realizadas com sucesso";
+            }
+            if (alert.alerta(Alert.AlertType.CONFIRMATION, "Confirmação do Usuário", msg1, "Sim", "Não")) {
+                an.ProgressIndicator(true, "Apagando Informações do Banco de Dados");
+
+                if (remover(tblPrincipal.getSelectionModel().getSelectedItems())) {
+                    try {
+                        lista = reg.BuscarRegiao();
+                        completar(lista);
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    an.ProgressIndicator(false, "");
+                    alert.alerta(Alert.AlertType.INFORMATION, "Operação Realizada Com Sucesso", msg2);
+
+                }
+
+            } else {
+                System.out.println("Erro");
+            }
+        }
+    }
+
+    boolean remover(List<Regiao> reg) {
+
+        for (int j = 0; j < reg.size(); j++) {
+
+            NegocioMedicao NMed = new NegocioMedicao(MDao);
+            NegocioRegiao NReg = new NegocioRegiao(RDao);
+
+            try {
+                List<Medicao> dadoMedicao = NMed.BuscarDados(reg.get(j));
+
+                for (int i = 0; i < dadoMedicao.size(); i++) {
+                    NMed.remover(dadoMedicao.get(i));
+                }
+                NReg.remover(reg.get(j));
+
+                System.out.println("Remocao Realizada com Sucesso");
+
+            } catch (Exception ex) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @FXML
     void btnVoltar_OnAction(ActionEvent event) {
+
+        Parent root;
+        try {
+            root = FXMLLoader.load(PrincipalController.class.getClassLoader().getResource("fxml/Principal.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
+            Monitor.SCENE.setRoot(root);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
 
     }
 
@@ -122,6 +197,7 @@ public class Consulta_MedicaoController implements Initializable {
     NegocioRegiao reg = new NegocioRegiao(RDao);
     MedicaoDAO MDao = new MedicaoDAO();
     NegocioMedicao medicao = new NegocioMedicao(MDao);
+    Animacao an = new Animacao();
 
     void completar(List<Regiao> list) {
 
@@ -140,6 +216,7 @@ public class Consulta_MedicaoController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        tblPrincipal.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         try {
             lista = reg.BuscarRegiao();
         } catch (Exception ex) {

@@ -29,5 +29,12 @@ public class NegocioRegiao {
     public List<Regiao> BuscarRegiao() throws Exception{
       return regiaoDAO.BuscarRegiao();
     }
+    public void remover(Regiao regiao) throws Exception{
+        try{
+            regiaoDAO.remover(Regiao.class, regiao);
+        }catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
     
 }

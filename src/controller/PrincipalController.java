@@ -10,6 +10,8 @@ import dao.RegiaoDAO;
 import java.io.File;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +23,8 @@ import javafx.stage.Stage;
 import monitor.Alertas;
 import monitor.LerMessage;
 import monitor.Monitor;
+import monitor.Animacao;
+import monitor.testePort;
 import negocio.Conversao;
 import negocio.DadosCache;
 import negocio.NegocioMedicao;
@@ -47,6 +51,8 @@ public class PrincipalController {
     @FXML
     private Button btnEstatistica;
 
+    Animacao an = new Animacao();
+
     @FXML
     void btnImportarDados_OnAction(ActionEvent event) {
         Alertas aviso = new Alertas();
@@ -68,15 +74,21 @@ public class PrincipalController {
 
             if (aviso.alerta(Alert.AlertType.CONFIRMATION, message.getMessage("msgAguardandoConfirmacao"), message.getMessage("msgConfirmacaoDeImportacao"), message.getMessage("msgSim"), message.getMessage("msgNao"))) {
                 String local = aviso.entrada_dados("Completar Dados Obrigatório", "Digite de qual local foi esta medição?", "Por favor digitel o local: ");
+
                 if (local != "") {
+
                     salvar(local, conv.getFile(file));
+                    an.ProgressIndicator(2000, "Salvando Informações no Banco de Dados");
+
                 } else {
                     System.out.println("Erro!");
                 }
+
                 if (aviso.alerta(Alert.AlertType.CONFIRMATION, message.getMessage("msgAguardandoConfirmacao"), "Importação realizada com sucesso! \nDeseja visualizar o gráfico?", message.getMessage("msgSim"), message.getMessage("msgNao"))) {
+                    an.ProgressIndicator(true, "Renderizando o Gráfico");
                     conv.getFile(file);
                     GraficoController.setMemoria(conv.getFile(file));
-
+                    an.ProgressIndicator(false, "");
                     Parent root;
                     root = FXMLLoader.load(GraficoController.class.getClassLoader().getResource("fxml/grafico.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
                     Monitor.SCENE.setRoot(root);
@@ -84,9 +96,11 @@ public class PrincipalController {
 
             } else {
                 aviso.alerta(Alert.AlertType.INFORMATION, message.getMessage("msgAcaoRealizadaComSucesso"), message.getMessage("msgGeracaoGrafico"));
+
+                an.ProgressIndicator(true, "Renderizando o Gráfico");
                 conv.getFile(file);
                 GraficoController.setMemoria(conv.getFile(file));
-
+                an.ProgressIndicator(false, "");
                 Parent root;
                 root = FXMLLoader.load(GraficoController.class.getClassLoader().getResource("fxml/grafico.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
                 Monitor.SCENE.setRoot(root);
@@ -100,7 +114,6 @@ public class PrincipalController {
 
     void salvar(String local, List<DadosCache> leitura) {
 
-        // Medicao med = new Medicao();
         Regiao reg = new Regiao();
 
         reg.setRegiao(local);
@@ -145,7 +158,7 @@ public class PrincipalController {
 
     @FXML
     void btnExportarDados_OnAction(ActionEvent event) {
-
+ 
     }
 
     @FXML
@@ -161,7 +174,7 @@ public class PrincipalController {
             Parent root;
             root = FXMLLoader.load(Consulta_MedicaoController.class.getClassLoader().getResource("fxml/Consulta_Medicao.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
             Monitor.SCENE.setRoot(root);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
 
@@ -183,7 +196,8 @@ public class PrincipalController {
     }
 
     public void initialize() {
-        System.out.println("Aqui estou");
+        //  System.out.println("Aqui estou");
+
     }
 
 }

@@ -31,6 +31,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import monitor.Alertas;
+import monitor.Animacao;
 import monitor.LerMessage;
 import monitor.Monitor;
 import negocio.DadosCache;
@@ -73,32 +74,36 @@ public class GraficoController implements Initializable {
 
     @FXML
     void rdbTemperaturaSoloOnAction(ActionEvent event) {
+        an.ProgressIndicator(true, "Renderizando o Gráfico");
         rdbUmidadeAmbiente.setSelected(false);
         if (!rdbTemperaturaAmbiente.isSelected() && !rdbUmidadeAmbiente.isSelected()) {
             rdbTemperaturaSolo.setSelected(true);
         }
         gerarGrafico();
-
+        an.ProgressIndicator(false, "");
     }
 
     @FXML
     void rdbTemperaturaAmbiente_OnAction(ActionEvent event) {
+        an.ProgressIndicator(true, "Renderizando o Gráfico");
         rdbUmidadeAmbiente.setSelected(false);
         if (!rdbTemperaturaSolo.isSelected() && !rdbUmidadeAmbiente.isSelected()) {
             rdbTemperaturaAmbiente.setSelected(true);
         }
         gerarGrafico();
-
+        an.ProgressIndicator(false, "");
     }
 
     @FXML
     void rdbUmidadeAmbiente_OnAction(ActionEvent event) {
+        an.ProgressIndicator(true, "Renderizando o Gráfico");
         rdbTemperaturaAmbiente.setSelected(false);
         rdbTemperaturaSolo.setSelected(false);
         if (!rdbTemperaturaAmbiente.isSelected() && !rdbTemperaturaSolo.isSelected()) {
             rdbUmidadeAmbiente.setSelected(true);
         }
         gerarGrafico();
+        an.ProgressIndicator(false, "");
     }
 
     @FXML
@@ -411,10 +416,13 @@ public class GraficoController implements Initializable {
 
             border.setCenter(lineChart);
         }
+
     }
 
+    Animacao an = new Animacao();
+
     @Override
-    public void initialize(URL url, ResourceBundle rb)  {
+    public void initialize(URL url, ResourceBundle rb) {
         Alertas aviso = new Alertas();
         LerMessage message = new LerMessage();
 
@@ -428,7 +436,7 @@ public class GraficoController implements Initializable {
                     gerarGrafico();
                 } catch (Exception ex) {
                     aviso.alerta(Alert.AlertType.ERROR, "Erro - Arquivo incompativel", ex.getMessage());
-                   // btnVoltar_OnAction(event);
+                    // btnVoltar_OnAction(event);
                 }
 
             }
