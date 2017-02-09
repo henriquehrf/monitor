@@ -6,6 +6,7 @@
 package negocio;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,35 +20,31 @@ import java.util.Scanner;
  */
 public class Conversao {
 
-     List<DadosCache> cache = new ArrayList<>();
+    List<DadosCache> cache = new ArrayList<>();
 
-    public List<DadosCache> getFile(File localizacao) {
-        try {
+    public List<DadosCache> getFile(File localizacao) throws Exception {
 
-            Scanner scanner = new Scanner(new FileReader(localizacao.getAbsolutePath())).useDelimiter("\\||\\n");
+        Scanner scanner = new Scanner(new FileReader(localizacao.getAbsolutePath())).useDelimiter("\\||\\n");
 
-            
-            while (scanner.hasNext()) {
-                DadosCache dc = new DadosCache();
+        while (scanner.hasNext()) {
+            DadosCache dc = new DadosCache();
 
-                String umidade_dht = scanner.next();
-                String temp_dht = scanner.next();
-                String temp_ds = scanner.next();
-                String data = scanner.next();
-                Date dt = new Date();
-                SimpleDateFormat dt_formatada = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-                dt = (Date) dt_formatada.parse(data);
+            String umidade_dht = scanner.next();
+            String temp_dht = scanner.next();
+            String temp_ds = scanner.next();
+            String data = scanner.next();
+            Date dt = new Date();
+            SimpleDateFormat dt_formatada = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+            dt = (Date) dt_formatada.parse(data);
 
-                dc.setData(dt);
-                dc.setTemp_ds(Float.parseFloat(temp_ds));
-                dc.setTemp_dth(Float.parseFloat(temp_dht));
-                dc.setUmidade_dht(Float.parseFloat(umidade_dht));
-                cache.add(dc);
+            dc.setData(dt);
+            dc.setTemp_ds(Float.parseFloat(temp_ds));
+            dc.setTemp_dth(Float.parseFloat(temp_dht));
+            dc.setUmidade_dht(Float.parseFloat(umidade_dht));
+            cache.add(dc);
 
-            }
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
         }
+
         return cache;
 
     }

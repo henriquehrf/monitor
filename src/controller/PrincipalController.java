@@ -106,7 +106,8 @@ public class PrincipalController {
 
             }
         } catch (Exception ex) {
-            aviso.alerta(Alert.AlertType.WARNING, "Erro", ex.getMessage());
+            //aviso.alerta(Alert.AlertType.WARNING, "Erro", ex.getMessage());
+            aviso.erro("Erro ao ler o arquivo", "Não foi possivel realizar a leitura do arquivo", "O arquivo não é compativel para a leitura ou pode estar corrompido", ex);
         }
 
     }
