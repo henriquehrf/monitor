@@ -6,13 +6,14 @@
 package negocio;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -46,6 +47,26 @@ public class Conversao {
         }
 
         return cache;
+
+    }
+
+    public DadosCache getString(String localizacao) throws Exception {
+        DadosCache dc = new DadosCache();
+        // Scanner scanner = new Scanner(new FileReader(localizacao.getAbsolutePath())).useDelimiter("\\||\\n");
+        String[] dado = localizacao.trim().split(Pattern.quote("|"));
+        
+        dc.setUmidade_dht(Float.parseFloat(dado[0]));
+        dc.setTemp_dth(Float.parseFloat(dado[1]));
+        dc.setTemp_ds(Float.parseFloat(dado[2]));
+
+        Date dt = new Date();
+        SimpleDateFormat dt_formatada = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        dt = (Date) dt_formatada.parse(dado[3]);
+
+        dc.setData(dt);
+       
+
+        return dc;
 
     }
 

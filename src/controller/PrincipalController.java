@@ -8,6 +8,8 @@ package controller;
 import dao.MedicaoDAO;
 import dao.RegiaoDAO;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -20,6 +22,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import jssc.Porta;
 import monitor.Alertas;
 import monitor.LerMessage;
 import monitor.Monitor;
@@ -88,6 +91,7 @@ public class PrincipalController {
                     conv.getFile(file);
                     GraficoController.setMemoria(conv.getFile(file));
                     an.ProgressIndicator(false, "");
+                    GraficoController.menu=true;
                     Parent root;
                     root = FXMLLoader.load(GraficoController.class.getClassLoader().getResource("fxml/grafico.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
                     Monitor.SCENE.setRoot(root);
@@ -100,6 +104,7 @@ public class PrincipalController {
                 conv.getFile(file);
                 GraficoController.setMemoria(conv.getFile(file));
                 an.ProgressIndicator(false, "");
+                GraficoController.menu=false;
                 Parent root;
                 root = FXMLLoader.load(GraficoController.class.getClassLoader().getResource("fxml/grafico.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
                 Monitor.SCENE.setRoot(root);
@@ -158,7 +163,7 @@ public class PrincipalController {
 
     @FXML
     void btnExportarDados_OnAction(ActionEvent event) {
- 
+
     }
 
     @FXML
@@ -188,6 +193,42 @@ public class PrincipalController {
     @FXML
     void btnEstatistica_OnAction(ActionEvent event) {
 
+        //System.out.println("aqui entrei na Porta Serial COM4");
+
+        Alertas alert = new Alertas();
+        Porta porta = new Porta();
+        
+        if(porta.getPort().size()==0){
+            alert.alerta(Alert.AlertType.WARNING, "Portas Seriais Indisponíveis", "Não foi possivel conectar ou não há nenhuma porta serial disponível");
+            return;
+        }
+        
+        GraficoController.porta_serial=alert.escolha(porta.getPort(), "Portas Seriais Disponíveis", "Selecione uma porta serial disponível", "Porta selecionada");
+        if (GraficoController.porta_serial != "") {
+
+            
+            GraficoController.real_time = true;
+            DadosCache dc = new DadosCache();
+            Date data = new Date();
+            dc.setData(data);
+            dc.setTemp_ds(0);
+            dc.setTemp_dth(0);
+            dc.setUmidade_dht(0);
+
+            List<DadosCache> dado = new ArrayList<>();
+            dado.add(dc);
+            GraficoController.setMemoria(dado);
+
+            try {
+
+                Parent root;
+                root = FXMLLoader.load(Consulta_MedicaoController.class.getClassLoader().getResource("fxml/grafico.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
+                Monitor.SCENE.setRoot(root);
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+
     }
 
     @FXML
@@ -196,8 +237,7 @@ public class PrincipalController {
     }
 
     public void initialize() {
-        //  System.out.println("Aqui estou");
-
+        //   test();
     }
 
 }

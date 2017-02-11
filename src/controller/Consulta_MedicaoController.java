@@ -7,15 +7,12 @@ package controller;
 
 import dao.MedicaoDAO;
 import dao.RegiaoDAO;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -76,6 +73,8 @@ public class Consulta_MedicaoController implements Initializable {
         if (tblPrincipal.getSelectionModel().getSelectedItem() == null) {
             return;
         } else {
+            GraficoController.real_time=false;
+            GraficoController.menu=true;
 
             an.ProgressIndicator(true, "Acessando o Banco de Dados  e Renderizando o Gráfico");
             List<Medicao> med = new ArrayList<>();

@@ -5,12 +5,10 @@
  */
 package controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +27,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import jssc.Porta;
 import monitor.Alertas;
 import monitor.Animacao;
 import monitor.LerMessage;
@@ -41,7 +39,10 @@ import negocio.DadosCache;
  *
  * @author Henrique Firmino
  */
-public class GraficoController implements Initializable {
+public class GraficoController extends Porta implements Initializable {
+
+    @FXML
+    private Button btnAtualizar;
 
     @FXML
     private RadioButton rdbTemperaturaSolo;
@@ -71,6 +72,14 @@ public class GraficoController implements Initializable {
 
     @FXML
     private Label lblDesvioPadrao;
+
+    public static List<DadosCache> memoria;
+
+    public static String porta_serial;
+
+    public static boolean real_time;
+
+    public static boolean menu;
 
     @FXML
     void rdbTemperaturaSoloOnAction(ActionEvent event) {
@@ -108,17 +117,38 @@ public class GraficoController implements Initializable {
 
     @FXML
     void btnVoltar_OnAction(ActionEvent event) {
-        try {
-            Parent root;
-            root = FXMLLoader.load(GraficoController.class.getClassLoader().getResource("fxml/Principal.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
-            Monitor.SCENE.setRoot(root);
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
+
+        if (real_time) {
+            try {
+                disconnectArduino();
+                Parent root;
+                root = FXMLLoader.load(GraficoController.class.getClassLoader().getResource("fxml/Principal.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
+                Monitor.SCENE.setRoot(root);
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+        if (menu) {
+            try {
+                Parent root;
+                root = FXMLLoader.load(GraficoController.class.getClassLoader().getResource("fxml/Consulta_Medicao.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
+                Monitor.SCENE.setRoot(root);
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
+            }
+        } else {
+            try {
+                Parent root;
+                root = FXMLLoader.load(GraficoController.class.getClassLoader().getResource("fxml/Principal.fxml"), ResourceBundle.getBundle("monitor/i18N_pt_BR"));
+                Monitor.SCENE.setRoot(root);
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
+            }
         }
 
     }
 
-    void gerarEstastistica() {
+    protected void gerarEstastistica() {
 
         if (rdbUmidadeAmbiente.isSelected()) {
             float media = 0;
@@ -274,15 +304,22 @@ public class GraficoController implements Initializable {
 
     }
 
+    @FXML
+    void btnAtualizarOnAction(ActionEvent event) {
+        an.ProgressIndicator(true, "Renderizando o Gráfico");
+        gerarGrafico();
+        an.ProgressIndicator(false, "");
+
+    }
+
     public static List<DadosCache> getMemoria() {
         return memoria;
     }
 
     public static void setMemoria(List<DadosCache> memoria) {
         GraficoController.memoria = memoria;
+        //gerarGrafico();
     }
-
-    public static List<DadosCache> memoria;
 
     String ajusteData(Date dt) {
 
@@ -293,8 +330,9 @@ public class GraficoController implements Initializable {
         return data;
     }
 
-    void gerarGrafico() {
+    public void gerarGrafico() {
         gerarEstastistica();
+
         if (rdbTemperaturaAmbiente.isSelected() && rdbTemperaturaSolo.isSelected()) {
             final CategoryAxis xAxis = new CategoryAxis();
             xAxis.setLabel("Periodo");
@@ -426,21 +464,39 @@ public class GraficoController implements Initializable {
         Alertas aviso = new Alertas();
         LerMessage message = new LerMessage();
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
+        try {
 
-                    rdbTemperaturaAmbiente.setSelected(true);
-                    rdbTemperaturaSolo.setSelected(true);
-                    gerarGrafico();
-                } catch (Exception ex) {
-                    aviso.alerta(Alert.AlertType.ERROR, "Erro - Arquivo incompativel", ex.getMessage());
-                    // btnVoltar_OnAction(event);
-                }
+            if (real_time) {
+                btnAtualizar.setVisible(true);
+                rdbTemperaturaAmbiente.setSelected(true);
+                rdbTemperaturaSolo.setSelected(true);
+                test();
+                gerarGrafico();
+            } else {
+                btnAtualizar.setVisible(false);
+
+                rdbTemperaturaAmbiente.setSelected(true);
+                rdbTemperaturaSolo.setSelected(true);
+                gerarGrafico();
 
             }
-        });
+        } catch (Exception ex) {
+            aviso.alerta(Alert.AlertType.ERROR, "Erro - Arquivo incompativel", ex.getMessage());
+        }
+    }
+
+    public void test() {
+        //Porta porta = new Porta();
+        try {
+
+            detectPort();
+            // porta.disconnectArduino();
+            if (connectArduino(porta_serial)) {
+                System.out.println("Conectado com sucesso");
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
 
     }
 

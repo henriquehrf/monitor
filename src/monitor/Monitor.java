@@ -15,14 +15,15 @@ import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import jssc.Porta;
 
 /**
  *
  * @author Henrique Firmino
  */
 public class Monitor extends Application {
-    
-   public static Scene SCENE;
+
+    public static Scene SCENE;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -48,11 +49,20 @@ public class Monitor extends Application {
         }
 
     }
-    
-     public static void main(String[] args) {
-         EntityManagerFactory emf = Persistence.createEntityManagerFactory("MonitorPU");
-         EntityManager em = emf.createEntityManager();
-          Application.launch(Monitor.class, args);
-     }
-    
+
+    public static void main(String[] args) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("MonitorPU");
+        EntityManager em = emf.createEntityManager();
+        Application.launch(Monitor.class, args);
+    }
+
+    @Override
+    public void stop() throws Exception {
+        Porta porta = new Porta();
+        porta.disconnectArduino();
+        System.exit(0);
+       // disconnectArduino();
+        super.stop();
+    }
+
 }

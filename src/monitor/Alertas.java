@@ -7,10 +7,12 @@ package monitor;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
 import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
@@ -85,8 +87,7 @@ public class Alertas {
         alert.setHeaderText(titulo);
         alert.setContentText(msg);
 
-       // Exception ex = new FileNotFoundException("Could not find file blabla.txt");
-
+        // Exception ex = new FileNotFoundException("Could not find file blabla.txt");
 // Create expandable Exception.
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -114,5 +115,21 @@ public class Alertas {
 
         alert.showAndWait();
 
+    }
+
+    public String escolha(List<String> opcao, String cabecalho, String titulo, String msg) {
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(opcao.get(0), opcao);
+        dialog.setTitle(cabecalho);
+        dialog.setHeaderText(titulo);
+        dialog.setContentText(msg);
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            // System.out.println("Your choice: " + result.get());
+            return result.get();
+        } else {
+            return "";
+        }
     }
 }

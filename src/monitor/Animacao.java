@@ -5,12 +5,8 @@
  */
 package monitor;
 
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 /**
  *
