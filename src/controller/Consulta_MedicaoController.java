@@ -66,6 +66,12 @@ public class Consulta_MedicaoController implements Initializable {
 
     @FXML
     private TableColumn<Regiao, String> tbcDescricao;
+    
+    
+    @FXML
+    void btnAlterar_OnAction(ActionEvent event){
+        
+    }
 
     @FXML
     void btnVisualizar_OnAction(ActionEvent event) {
@@ -75,6 +81,7 @@ public class Consulta_MedicaoController implements Initializable {
         } else {
             GraficoController.real_time=false;
             GraficoController.menu=true;
+            GraficoController.regiao=tblPrincipal.getSelectionModel().getSelectedItem().getRegiao();
 
             an.ProgressIndicator(true, "Acessando o Banco de Dados  e Renderizando o Gráfico");
             List<Medicao> med = new ArrayList<>();
@@ -106,10 +113,7 @@ public class Consulta_MedicaoController implements Initializable {
         }
     }
 
-    @FXML
-    void btnImprimir_OnAction(ActionEvent event) {
 
-    }
 
     @FXML
     void btnExcluir_OnAction(ActionEvent event) {

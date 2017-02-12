@@ -31,6 +31,7 @@ import negocio.Conversao;
 import negocio.DadosCache;
 import negocio.NegocioMedicao;
 import negocio.NegocioRegiao;
+import relatorio.GerarPDF;
 import vo.Medicao;
 import vo.Regiao;
 
@@ -237,6 +238,8 @@ public class PrincipalController {
     }
 
     public void initialize() {
+        //teaser t = new teaser();
+       // t.imprimir();
         //   test();
     }
 

@@ -29,7 +29,7 @@
                         <Insets left="10.0" right="10.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="btnImprimir" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnImprimir_OnAction" prefWidth="100.0" styleClass="button-alterar" text="%btnGerarRelatorio">
+                  <Button fx:id="btnAlterar" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnAlterar_OnAction" prefWidth="100.0" styleClass="button-alterar" text="%btnAlterar">
                      <HBox.margin>
                         <Insets left="10.0" right="10.0" />
                      </HBox.margin>

@@ -7,17 +7,23 @@ package monitor;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.stage.StageStyle;
 
 /**
  *
@@ -132,4 +138,39 @@ public class Alertas {
             return "";
         }
     }
+
+    public List<String> escolha_Radiobutton(List<RadioButton> opcao, String cabecalho, String titulo, String btnConfirmacao) {
+        Dialog<String> dialog = new Dialog<>();
+
+        dialog.initStyle(StageStyle.DECORATED);
+        dialog.setTitle(cabecalho);
+        dialog.setHeaderText(titulo);
+        dialog.setContentText("");
+
+        ButtonType confirmacao = new ButtonType(btnConfirmacao, ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(confirmacao, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        for (int i = 0; i < opcao.size(); i++) {
+            //grid.add(new Label(opcao.get(i).getText()), 0, i);
+            grid.add(opcao.get(i), 1, i);
+        }
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.showAndWait();
+
+        List<String> selecao = new ArrayList<>();
+        for (int j = 0; j < opcao.size(); j++) {
+            if (opcao.get(j).isSelected()) {
+                selecao.add(opcao.get(j).getText());
+            }
+        }
+        return selecao;
+    }
+
 }

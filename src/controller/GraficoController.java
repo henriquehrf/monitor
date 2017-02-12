@@ -5,8 +5,10 @@
  */
 package controller;
 
+import java.io.File;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -27,12 +29,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import jssc.Porta;
 import monitor.Alertas;
 import monitor.Animacao;
 import monitor.LerMessage;
 import monitor.Monitor;
 import negocio.DadosCache;
+import org.jfree.chart.JFreeChart;
+import relatorio.GerarPDF;
 
 /**
  * FXML Controller class
@@ -43,6 +49,9 @@ public class GraficoController extends Porta implements Initializable {
 
     @FXML
     private Button btnAtualizar;
+
+    @FXML
+    private Button btnImprimir;
 
     @FXML
     private RadioButton rdbTemperaturaSolo;
@@ -76,6 +85,8 @@ public class GraficoController extends Porta implements Initializable {
     public static List<DadosCache> memoria;
 
     public static String porta_serial;
+    
+     public static String regiao;
 
     public static boolean real_time;
 
@@ -90,6 +101,58 @@ public class GraficoController extends Porta implements Initializable {
         }
         gerarGrafico();
         an.ProgressIndicator(false, "");
+    }
+
+    @FXML
+    void btnImprimir_OnAction(ActionEvent event) {
+        Alertas alert = new Alertas();
+
+        boolean enableTAmbiente = false;
+        boolean enableTSolo = false;
+        boolean enableUmidade = false;
+
+        RadioButton rb1 = new RadioButton("Temperatura Ambiente");
+        RadioButton rb2 = new RadioButton("Temperatura do Solo");
+        RadioButton rb3 = new RadioButton("Umidade");
+
+        List<RadioButton> opcao = new ArrayList<>();
+        List<String> selecionado = new ArrayList<>();
+        opcao.add(rb1);
+        opcao.add(rb2);
+        opcao.add(rb3);
+
+        selecionado = alert.escolha_Radiobutton(opcao, "Aguardando confirmação do usuário", "Qual das opções deseja gerar o PDF?", "GerarPDF");
+
+        for (int i = 0; i < selecionado.size(); i++) {
+            if (selecionado.get(i).equalsIgnoreCase("Temperatura Ambiente")) {
+                enableTAmbiente = true;
+            }
+            if (selecionado.get(i).equalsIgnoreCase("Temperatura do Solo")) {
+                enableTSolo = true;
+            }
+            if (selecionado.get(i).equalsIgnoreCase("Umidade")) {
+                enableUmidade = true;
+            }
+        }
+        if (selecionado.size() == 0) {
+            return;
+        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Selecione um local para salvar o arquivo");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Portable Document Format - PDF", "*.pdf"));
+        Stage stage = new Stage();
+        File file = fileChooser.showSaveDialog(stage);
+        
+        an.ProgressIndicator(true, "Gerando o arquivo Pdf");
+        
+        GerarPDF pdf = new GerarPDF();
+        
+        List<JFreeChart> dado = pdf.add(memoria, regiao.toUpperCase(), enableTSolo, enableTAmbiente, enableUmidade);
+        pdf.writeChartToPDF(dado, 800, 550, file.getAbsolutePath());
+        an.ProgressIndicator(false, "");
+        alert.alerta(Alert.AlertType.INFORMATION, "Operação realizada com sucesso", "Seu arquivo pdf foi gerado com sucesso");
+
     }
 
     @FXML
@@ -473,7 +536,7 @@ public class GraficoController extends Porta implements Initializable {
                 test();
                 gerarGrafico();
             } else {
-                btnAtualizar.setVisible(false);
+                btnAtualizar.setDisable(true);
 
                 rdbTemperaturaAmbiente.setSelected(true);
                 rdbTemperaturaSolo.setSelected(true);

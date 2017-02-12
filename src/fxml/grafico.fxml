@@ -40,26 +40,29 @@
                         <Insets left="20.0" right="20.0" />
                      </HBox.margin>
                   </Label>
-                  <Button fx:id="btnAtualizar" mnemonicParsing="false" onAction="#btnAtualizarOnAction" text="Atualizar" />
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="51.0" prefWidth="800.0">
+               <children>
+                  <RadioButton fx:id="rdbTemperaturaAmbiente" mnemonicParsing="false" onAction="#rdbTemperaturaAmbiente_OnAction" text="%rdbTemperaturaAmbiente" />
+                  <RadioButton fx:id="rdbTemperaturaSolo" mnemonicParsing="false" onAction="#rdbTemperaturaSoloOnAction" text="%rdbTemperaturaSolo" />
+                  <RadioButton fx:id="rdbUmidadeAmbiente" mnemonicParsing="false" onAction="#rdbUmidadeAmbiente_OnAction" text="%rdbUmidadeAmbiente" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="65.0" prefWidth="600.0">
                <children>
-                  <RadioButton fx:id="rdbTemperaturaSolo" mnemonicParsing="false" onAction="#rdbTemperaturaSoloOnAction" text="%rdbTemperaturaSolo">
+                  <Button fx:id="btnAtualizar" mnemonicParsing="false" onAction="#btnAtualizarOnAction" text="Atualizar">
                      <HBox.margin>
-                        <Insets left="10.0" right="10.0" />
-                     </HBox.margin></RadioButton>
-                  <RadioButton fx:id="rdbTemperaturaAmbiente" mnemonicParsing="false" onAction="#rdbTemperaturaAmbiente_OnAction" text="%rdbTemperaturaAmbiente">
+                        <Insets left="20.0" right="20.0" />
+                     </HBox.margin></Button>
+                  <Button fx:id="btnImprimir" mnemonicParsing="false" onAction="#btnImprimir_OnAction" text="Imprimir">
                      <HBox.margin>
-                        <Insets left="10.0" right="10.0" />
-                     </HBox.margin></RadioButton>
-                  <RadioButton fx:id="rdbUmidadeAmbiente" mnemonicParsing="false" onAction="#rdbUmidadeAmbiente_OnAction" text="%rdbUmidadeAmbiente">
-                     <HBox.margin>
-                        <Insets left="10.0" right="10.0" />
-                     </HBox.margin></RadioButton>
+                        <Insets left="20.0" right="20.0" />
+                     </HBox.margin>
+                  </Button>
                   <Button fx:id="btnVoltar" mnemonicParsing="false" onAction="#btnVoltar_OnAction" onKeyPressed="#btnVoltar_OnKeyPressed" text="%btnVoltar">
                      <HBox.margin>
-                        <Insets left="10.0" right="10.0" />
+                        <Insets left="20.0" right="20.0" />
                      </HBox.margin>
                   </Button>
                </children>
