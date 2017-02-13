@@ -15,27 +15,27 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="800.0">
                <children>
-                  <Label fx:id="lblMaximo">
+                  <Label fx:id="lblMaximo" styleClass="label-data">
                      <HBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </HBox.margin>
                   </Label>
-                  <Label fx:id="lblMinimo">
+                  <Label fx:id="lblMinimo" styleClass="label-data">
                      <HBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </HBox.margin>
                   </Label>
-                  <Label fx:id="lblMedia">
+                  <Label fx:id="lblMedia" styleClass="label-data">
                      <HBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </HBox.margin>
                   </Label>
-                  <Label fx:id="lblVarianca">
+                  <Label fx:id="lblVarianca" styleClass="label-data">
                      <HBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </HBox.margin>
                   </Label>
-                  <Label fx:id="lblDesvioPadrao">
+                  <Label fx:id="lblDesvioPadrao" styleClass="label-data">
                      <HBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </HBox.margin>
@@ -51,16 +51,16 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="65.0" prefWidth="600.0">
                <children>
-                  <Button fx:id="btnAtualizar" mnemonicParsing="false" onAction="#btnAtualizarOnAction" text="Atualizar">
+                  <Button fx:id="btnAtualizar" mnemonicParsing="false" onAction="#btnAtualizarOnAction" styleClass="button-refresh" text="Atualizar">
                      <HBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </HBox.margin></Button>
-                  <Button fx:id="btnImprimir" mnemonicParsing="false" onAction="#btnImprimir_OnAction" text="Imprimir">
+                  <Button fx:id="btnImprimir" mnemonicParsing="false" onAction="#btnImprimir_OnAction" styleClass="button-print" text="Imprimir">
                      <HBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="btnVoltar" mnemonicParsing="false" onAction="#btnVoltar_OnAction" onKeyPressed="#btnVoltar_OnKeyPressed" text="%btnVoltar">
+                  <Button fx:id="btnVoltar" mnemonicParsing="false" onAction="#btnVoltar_OnAction" onKeyPressed="#btnVoltar_OnKeyPressed" styleClass="button-voltar" text="%btnVoltar">
                      <HBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </HBox.margin>
